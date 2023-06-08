@@ -12,7 +12,9 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.app.ticket.model.HistoryBean;
 import com.app.ticket.model.UserDetails;
+import com.app.ticket.service.BookingService;
 import com.app.ticket.service.UserService;
 
 @RestController
@@ -20,6 +22,8 @@ public class BookingController {
 
 	@Autowired
 	UserService userService;
+	@Autowired
+	BookingService bookingService;
 
 	@GetMapping("/test")
 	public String check() {
@@ -43,13 +47,25 @@ public class BookingController {
 	public String DeleteUser(@RequestParam("pno") String deleteUser) throws SQLException {
 		return userService.deleteUser(deleteUser);
 	}
+
 	@PutMapping("/updateUser")
 	public String updateUser(@RequestBody UserDetails userDetails) {
 		return userService.updateUser(userDetails);
 	}
+
 	@GetMapping("/getAllUser")
-	public List<UserDetails> getAllUser(){
-		
+	public List<UserDetails> getAllUser() {
+
 		return userService.getAllUsers();
+	}
+
+	@GetMapping("/getAllBookingsByCustomerId")
+	public  List<HistoryBean> getAllBookingsByCustomerId(@RequestParam("customerEmailId")String customerEmailId) throws Exception{
+		return bookingService.getAllBookingsByCustomerId(customerEmailId);
+	}
+
+	@PostMapping("/bookingTickets")
+    public HistoryBean bookingTickets(@RequestBody HistoryBean bookingDetails) throws Exception {
+		return bookingService.createHistory(bookingDetails);
 	}
 }
